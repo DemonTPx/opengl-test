@@ -55,6 +55,9 @@ bool Main::init() {
     glMatrixMode(GL_PROJECTION);
     glOrtho(0, (GLdouble) VIEWPORT_W, (GLdouble) VIEWPORT_H, 0, -0.1, 0.1);
 
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+    glEnable(GL_BLEND);
+
     return true;
 }
 
@@ -82,36 +85,36 @@ void Main::process_events() {
 void Main::draw_screen() {
     glMatrixMode(GL_MODELVIEW);
 
-    glClear( GL_COLOR_BUFFER_BIT );
-    glLoadIdentity( );
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
 
-    glColor3f( 1.0, 0.0, 0.0 );
-    glBegin( GL_QUADS );
-        glVertex3i( 100, 200, 0 );
-        glVertex3i( 200, 200, 0 );
-        glVertex3i( 200, 100, 0 );
-        glVertex3i( 100, 100, 0 );
-    glEnd( );
-
-    glColor3f( 0.0, 1.0, 0.0 );
-    glBegin(GL_TRIANGLES);
-        glVertex3i( 500, 500, 0 );
-        glVertex3i( 500, 400, 0 );
-        glVertex3i( 400, 400, 0 );
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_QUADS);
+        glVertex3i(100, 200, 0);
+        glVertex3i(200, 200, 0);
+        glVertex3i(200, 100, 0);
+        glVertex3i(100, 100, 0);
     glEnd();
 
-    glColor3f( 0.0, 0.0, 1.0);
+    glColor3f(0.0, 1.0, 0.0);
+    glBegin(GL_TRIANGLES);
+        glVertex3i(500, 500, 0);
+        glVertex3i(500, 400, 0);
+        glVertex3i(400, 400, 0);
+    glEnd();
+
+    glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
-        glVertex3i( 100, 500, 0 );
-        glVertex3i( 200, 500, 0 );
-        glVertex3i( 200, 500, 0 );
-        glVertex3i( 150, 550, 0 );
-        glVertex3i( 150, 550, 0 );
-        glVertex3i( 100, 500, 0 );
+        glVertex3i(100, 500, 0);
+        glVertex3i(200, 500, 0);
+        glVertex3i(200, 500, 0);
+        glVertex3i(150, 550, 0);
+        glVertex3i(150, 550, 0);
+        glVertex3i(100, 500, 0);
     glEnd();
 
     float x = 205, y = 100, r = 100;
-    x = x + (int) (sin((double)frame / 50) * 50);
+    x = x + (int) (sin((double) frame / 50) * 50);
 
     Circle circle(x, y, r, 50);
     circle.draw();
