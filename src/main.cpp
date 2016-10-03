@@ -4,12 +4,10 @@
 #include "main.hpp"
 #include "circle.hpp"
 
-Main::Main()
-:
-    running(true),
-    frame(0)
+Main::Main():
+        running(true),
+        frame(0)
 {
-    frame_delay = 1000 / FRAMES_PER_SECOND;
 }
 
 Main::~Main() {
@@ -121,8 +119,8 @@ void Main::draw_screen() {
 
 void Main::flip()
 {
-    if (fps.get_ticks() < frame_delay) {
-        SDL_Delay(frame_delay - fps.get_ticks());
+    if (fps.get_ticks() < FRAME_DELAY) {
+        SDL_Delay(FRAME_DELAY - fps.get_ticks());
     }
 
     SDL_GL_SwapWindow(window);

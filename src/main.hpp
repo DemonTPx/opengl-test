@@ -11,6 +11,7 @@
 #define VIEWPORT_H 720
 
 #define FRAMES_PER_SECOND 60
+#define FRAME_DELAY 1000 / FRAMES_PER_SECOND
 
 class Main {
 public:
@@ -26,7 +27,6 @@ public:
     int frame;
 
     Timer fps;
-    Uint32 frame_delay;
 private:
     bool init();
     void clean_up();
