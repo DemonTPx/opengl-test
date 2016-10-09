@@ -11,8 +11,8 @@ Ball::Ball(float x, float y):
         Ball(x, y, 10.0) {}
 
 void Ball::move() {
-    x += velX;
-    y += velY;
+    x += speed * cos(direction);
+    y += speed * sin(direction);
 }
 
 void Ball::draw() {

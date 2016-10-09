@@ -22,30 +22,44 @@ int Main::run() {
 
     srand(time(NULL));
 
-    ball.velX = -4.0f + (((float) rand()) / (float) RAND_MAX) * 8.0f;
-    ball.velY = -4.0f + (((float) rand()) / (float) RAND_MAX) * 8.0f;
+    const float originX = VIEWPORT_H / 2;
+    const float originY = VIEWPORT_H / 2;
 
-    std::cout << "VelX: " << ball.velX << " VelY: " << ball.velY << std::endl;
+    ball.x = VIEWPORT_H / 2;
+    ball.y = VIEWPORT_H / 20;
+    ball.speed = 5.0;
+    ball.direction = 0;
+
+//    ball.direction = (float) fmod((float) rand(), M_PI * 2);
+
+    float directionFromOrigin = 0.0;
+    float distanceFromOrigin;
 
     while (running) {
         process_events();
         ball.move();
 
-        const float originX = VIEWPORT_H / 2;
-        const float originY = VIEWPORT_H / 2;
+        distanceFromOrigin = sqrtf(pow(fabs(ball.x - originX), 2) + pow(fabs(ball.y - originY), 2));
+        directionFromOrigin = atan2(ball.y - originY, ball.x - originX);
 
-        float distance;
+        if (distanceFromOrigin > ((VIEWPORT_H / 2) - ball.r)) {
 
-        distance = sqrtf(pow(fabs(ball.x - originX), 2) + pow(fabs(ball.y - originY), 2));
+            std::cout << "Bouce!" << std::endl;
 
-        if (distance > ((VIEWPORT_H / 2) - ball.r)) {
-            ball.velX = ball.velX * -1.0f;
-            ball.velX = fmin(ball.velX * (1 + ((((float) rand()) / (float) RAND_MAX) * 0.1f)), 10);
-            ball.velY = ball.velY * -1.0f;
-            ball.velY = fmin(ball.velY * (1 + ((((float) rand()) / (float) RAND_MAX) * 0.1f)), 10);
+            std::cout << "Direction: " << ball.direction << " / Speed: " << ball.speed << std::endl;
 
-            std::cout << "BOUNCE!" << std::endl;
-            std::cout << "VelX: " << ball.velX << " VelY: " << ball.velY << std::endl;
+            std::cout << "Direction from origin: " << directionFromOrigin << std::endl;
+            std::cout << "Distance from origin: " << distanceFromOrigin << std::endl;
+
+//            ball.direction = (float) fmod(ball.direction + M_PI, M_PI * 2);
+//            ball.direction += -(M_PI / 8) + fmod((float) rand(), M_PI / 4);
+
+            ball.direction += M_PI + (2 * (directionFromOrigin - ball.direction));
+
+//            ball.speed += fmod((float) rand(), 0.2f);
+//            ball.speed = (float) fmin(10.0f, ball.speed);
+
+            std::cout << "Direction: " << ball.direction << " / Speed: " << ball.speed << std::endl;
         }
 
         draw_screen();

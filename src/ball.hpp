@@ -9,8 +9,8 @@ public:
     float y;
     float r;
 
-    float velX = 0.0;
-    float velY = 0.0;
+    float speed = 0.0;
+    float direction = 0.0;
 
     void move();
     void draw();
