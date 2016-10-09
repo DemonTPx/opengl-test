@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
@@ -6,7 +7,8 @@
 
 Main::Main():
         running(true),
-        frame(0)
+        frame(0),
+        ball(VIEWPORT_H / 2, VIEWPORT_H / 2)
 {
 }
 
@@ -18,8 +20,34 @@ int Main::run() {
         return 1;
     }
 
+    srand(time(NULL));
+
+    ball.velX = -4.0f + (((float) rand()) / (float) RAND_MAX) * 8.0f;
+    ball.velY = -4.0f + (((float) rand()) / (float) RAND_MAX) * 8.0f;
+
+    std::cout << "VelX: " << ball.velX << " VelY: " << ball.velY << std::endl;
+
     while (running) {
         process_events();
+        ball.move();
+
+        const float originX = VIEWPORT_H / 2;
+        const float originY = VIEWPORT_H / 2;
+
+        float distance;
+
+        distance = sqrtf(pow(fabs(ball.x - originX), 2) + pow(fabs(ball.y - originY), 2));
+
+        if (distance > ((VIEWPORT_H / 2) - ball.r)) {
+            ball.velX = ball.velX * -1.0f;
+            ball.velX = fmin(ball.velX * (1 + ((((float) rand()) / (float) RAND_MAX) * 0.1f)), 10);
+            ball.velY = ball.velY * -1.0f;
+            ball.velY = fmin(ball.velY * (1 + ((((float) rand()) / (float) RAND_MAX) * 0.1f)), 10);
+
+            std::cout << "BOUNCE!" << std::endl;
+            std::cout << "VelX: " << ball.velX << " VelY: " << ball.velY << std::endl;
+        }
+
         draw_screen();
         flip();
     }
@@ -53,10 +81,10 @@ bool Main::init() {
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
-    glOrtho(0, (GLdouble) VIEWPORT_W, (GLdouble) VIEWPORT_H, 0, -0.1, 0.1);
+    glOrtho(0, (GLdouble) VIEWPORT_W, (GLdouble) VIEWPORT_H, 0, -1.0, 1.0);
 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+//    glEnable(GL_BLEND);
 
     return true;
 }
@@ -88,36 +116,24 @@ void Main::draw_screen() {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 
-    glColor3f(1.0, 0.0, 0.0);
+    Color red(1.0, 0.0, 0.0),
+            green(0.0, 1.0, 0.0),
+            blue(0.0, 0.0, 1.0),
+            white(1.0, 1.0, 1.0),
+            black(0.0, 0.0, 0.0);
+
+    Color(0.5, 0.5, 0.5).commit();
     glBegin(GL_QUADS);
-        glVertex3i(100, 200, 0);
-        glVertex3i(200, 200, 0);
-        glVertex3i(200, 100, 0);
-        glVertex3i(100, 100, 0);
+        glVertex3i(0, VIEWPORT_H, 0);
+        glVertex3i(VIEWPORT_H, VIEWPORT_H, 0);
+        glVertex3i(VIEWPORT_H, 0, 0);
+        glVertex3i(0, 0, 0);
     glEnd();
 
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_TRIANGLES);
-        glVertex3i(500, 500, 0);
-        glVertex3i(500, 400, 0);
-        glVertex3i(400, 400, 0);
-    glEnd();
-
-    glColor3f(0.0, 0.0, 1.0);
-    glBegin(GL_LINES);
-        glVertex3i(100, 500, 0);
-        glVertex3i(200, 500, 0);
-        glVertex3i(200, 500, 0);
-        glVertex3i(150, 550, 0);
-        glVertex3i(150, 550, 0);
-        glVertex3i(100, 500, 0);
-    glEnd();
-
-    float x = 205, y = 100, r = 100;
-    x = x + (int) (sin((double) frame / 50) * 50);
-
-    Circle circle(x, y, r, 50);
+    Circle circle(VIEWPORT_H / 2, VIEWPORT_H / 2, VIEWPORT_H / 2, black, black);
     circle.draw();
+
+    ball.draw();
 }
 
 void Main::flip()

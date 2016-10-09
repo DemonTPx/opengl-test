@@ -2,7 +2,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "timer.h"
+#include "timer.hpp"
+#include "ball.hpp"
 
 #define WINDOW_W 1280
 #define WINDOW_H 720
@@ -27,6 +28,8 @@ public:
     int frame;
 
     Timer fps;
+
+    Ball ball;
 private:
     bool init();
     void clean_up();
