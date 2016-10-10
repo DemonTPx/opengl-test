@@ -97,8 +97,8 @@ bool Main::init() {
     glMatrixMode(GL_PROJECTION);
     glOrtho(0, (GLdouble) VIEWPORT_W, (GLdouble) VIEWPORT_H, 0, -1.0, 1.0);
 
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-//    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 
     return true;
 }
