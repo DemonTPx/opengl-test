@@ -2,8 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include "main.hpp"
-#include "circle.hpp"
+#include "Main.hpp"
+#include "Circle.hpp"
+#include "EntityLoader.hpp"
 
 Main::Main():
         running(true),
@@ -161,6 +162,15 @@ void Main::flip()
 }
 
 int main(int argc, char *args[]) {
+
+    EntityLoader loader;
+    auto entity = loader.load("resources/entity/ball.yml");
+
+    std::cout << entity.ListActors() << std::endl;
+
+
+    return 0;
+
     Main main;
     main.run();
 }

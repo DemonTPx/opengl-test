@@ -1,6 +1,6 @@
 #include <SDL2/SDL_opengl.h>
 
-#include "circle.hpp"
+#include "Circle.hpp"
 
 Circle::Circle(float const x, float const y, float const radius, int const numSegments, const Color &colorInner, const Color &colorOuter) :
         x(x),

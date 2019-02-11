@@ -1,6 +1,6 @@
 #include "SDL2/SDL.h"
 
-#include "timer.hpp"
+#include "Timer.hpp"
 
 Timer::Timer() {
     startTicks = 0;

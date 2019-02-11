@@ -1,5 +1,5 @@
-#include "ball.hpp"
-#include "circle.hpp"
+#include "Ball.hpp"
+#include "Circle.hpp"
 
 
 Ball::Ball(float x, float y, float r):

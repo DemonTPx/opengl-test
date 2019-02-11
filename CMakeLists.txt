@@ -3,6 +3,7 @@ project(opengl-test)
 
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
     message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
@@ -19,6 +20,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 set(ALL_LIBS
         ${SDL2_LIBRARIES}
         ${OPENGL_LIBRARY}
+        ${YAML_CPP_LIBRARIES}
 )
 
 add_definitions(
@@ -26,8 +28,8 @@ add_definitions(
         -fpermissive
 )
  
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-file(GLOB_RECURSE HEADERS "src/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/actor/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp" "src/actor/*.hpp")
 
 add_executable(opengl_test
         ${SOURCES}
