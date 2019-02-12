@@ -16,5 +16,5 @@ public:
     static Color Build(YAML::Node node);
 
     void commit();
-    const std::string ToString();
+    std::string ToString() const;
 };

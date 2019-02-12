@@ -2,21 +2,14 @@
 #include "../Color.hpp"
 
 
-Component *RenderComponent::Build(const YAML::Node data) {
+StrongActorComponentPtr RenderComponent::Build(const YAML::Node data) {
     if (data["type"].as<std::string>() == "ball") {
-        return new BallRenderComponent(Color::Build(data["color"]));
+        return StrongActorComponentPtr(new BallRenderComponent(Color::Build(data["color"])));
     }
 
-    return new RenderComponent();
-}
-
-const std::string RenderComponent::ToString() {
-    return "<RenderComponent>";
+    return StrongActorComponentPtr(new RenderComponent());
 }
 
 BallRenderComponent::BallRenderComponent(Color color) : color(color) {
 }
 
-const std::string BallRenderComponent::ToString() {
-    return "<BallRenderComponent color="  + color.ToString() + ">";
-}

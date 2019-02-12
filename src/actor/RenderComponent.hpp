@@ -2,21 +2,23 @@
 
 
 #include <yaml-cpp/yaml.h>
-#include "Component.hpp"
+#include "ActorComponent.hpp"
 #include "../Color.hpp"
 
-class RenderComponent : public Component {
+class RenderComponent : public ActorComponent {
 public:
-    static Component *Build(YAML::Node data);
+    static StrongActorComponentPtr Build(YAML::Node data);
 
-    const std::string ToString() override;
+    std::string GetName() const override { return "RenderComponent"; };
 };
 
 class BallRenderComponent : public RenderComponent {
 public:
     explicit BallRenderComponent(Color color);
 
+    std::string GetName() const override { return "BallRenderComponent"; };
+    std::string AttributesToString() const override { return "color=" + color.ToString(); };
+
 private:
     Color color;
-    const std::string ToString() override;
 };

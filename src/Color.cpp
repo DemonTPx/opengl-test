@@ -18,7 +18,7 @@ void Color::commit()
     glColor4f(red, green, blue, alpha);
 }
 
-const std::string Color::ToString() {
+std::string Color::ToString() const {
     return "<Color red=" + std::to_string(red) +
                  " green=" + std::to_string(green) +
                  " blue=" + std::to_string(blue) +

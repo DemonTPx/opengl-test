@@ -164,10 +164,13 @@ void Main::flip()
 int main(int argc, char *args[]) {
 
     ActorLoader loader;
-    auto entity = loader.load("resources/actor/ball.yml");
+    auto actor = loader.Load("resources/actor/ball.yml");
 
-    std::cout << entity.ListComponents() << std::endl;
+    std::cout << actor->ListComponents() << std::endl;
 
+    actor->Update(100);
+
+    actor->Destroy();
 
     return 0;
 

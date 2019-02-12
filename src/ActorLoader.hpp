@@ -3,14 +3,20 @@
 
 #include <unordered_map>
 #include "Actor.hpp"
-#include "actor/ComponentFactory.hpp"
+
 
 class ActorLoader {
 public:
-    Actor load(const char * filename);
+    ActorLoader();
+
+    StrongActorPtr Load(const char *filename);
 
 private:
-    ComponentFactory componentFactory;
+    ActorId lastActorId = 0;
+    ComponentBuilderMap builders;
+
+    ActorId GetNextActorId();
+    StrongActorComponentPtr CreateComponent(std::string type, YAML::Node data);
 };
 
 

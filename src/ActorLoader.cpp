@@ -5,12 +5,19 @@
 #include "actor/RenderComponent.hpp"
 #include "actor/PhysicsComponent.hpp"
 
-Actor ActorLoader::load(const char * filename) {
+
+ActorLoader::ActorLoader() {
+    builders["render"] = RenderComponent::Build;
+    builders["physics"] = PhysicsComponent::Build;
+}
+
+
+StrongActorPtr ActorLoader::Load(const char *filename) {
     auto yaml = YAML::LoadFile(filename);
 
     assert(yaml.IsSequence());
 
-    auto a = new Actor;
+    StrongActorPtr actor(new Actor(GetNextActorId()));
 
     for (YAML::const_iterator it = yaml.begin(); it != yaml.end(); ++it) {
         YAML::Node node = *it;
@@ -18,16 +25,32 @@ Actor ActorLoader::load(const char * filename) {
         assert(node.IsMap());
         assert(node["type"]);
 
-        auto c = componentFactory.Create(node["type"].Scalar(), node["data"]);
+        StrongActorComponentPtr component(CreateComponent(node["type"].Scalar(), node["data"]));
 
-        if (c == nullptr) {
+        if ( ! component) {
             std::cerr << "Failed creating component with type " << node["type"].Scalar() << std::endl;
             continue;
         }
 
-        a->AddComponent(c);
+        actor->AddComponent(component);
+        component->SetOwner(actor);
+
         std::cout << "New component of type " << node["type"].Scalar() << std::endl;
     }
     
-    return *a;
+    return actor;
+}
+
+StrongActorComponentPtr ActorLoader::CreateComponent(const std::string type, const YAML::Node data) {
+    if ( ! builders[type]) {
+        return StrongActorComponentPtr();
+    }
+
+    return builders[type](data);
+}
+
+ActorId ActorLoader::GetNextActorId() {
+    ++lastActorId;
+
+    return lastActorId;
 }

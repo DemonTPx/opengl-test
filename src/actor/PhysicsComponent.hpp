@@ -2,13 +2,13 @@
 
 
 #include <yaml-cpp/yaml.h>
-#include "Component.hpp"
+#include "ActorComponent.hpp"
 
-class PhysicsComponent : public Component {
+class PhysicsComponent : public ActorComponent {
 public:
-    static Component *Build(YAML::Node data);
+    static StrongActorComponentPtr Build(YAML::Node data);
 
-    const std::string ToString() override;
+    std::string GetName() const override { return "PhysicsComponent"; };
 };
 
 
