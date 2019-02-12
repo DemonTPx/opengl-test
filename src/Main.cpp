@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 #include "Circle.hpp"
-#include "EntityLoader.hpp"
+#include "ActorLoader.hpp"
 
 Main::Main():
         running(true),
@@ -163,10 +163,10 @@ void Main::flip()
 
 int main(int argc, char *args[]) {
 
-    EntityLoader loader;
-    auto entity = loader.load("resources/entity/ball.yml");
+    ActorLoader loader;
+    auto entity = loader.load("resources/actor/ball.yml");
 
-    std::cout << entity.ListActors() << std::endl;
+    std::cout << entity.ListComponents() << std::endl;
 
 
     return 0;

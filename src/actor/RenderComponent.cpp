@@ -18,5 +18,5 @@ BallRenderComponent::BallRenderComponent(Color color) : color(color) {
 }
 
 const std::string BallRenderComponent::ToString() {
-    return "<BallRenderComponent "  + color.ToString() + ">";
+    return "<BallRenderComponent color="  + color.ToString() + ">";
 }
