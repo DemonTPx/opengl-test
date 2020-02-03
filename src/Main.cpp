@@ -24,7 +24,7 @@ int Main::run() {
     }
 
     auto textureContainer = Texture("./resources/image/container.jpg");
-    auto textureAwesome = Texture("./resources/image/wall.jpg");
+    auto textureAwesome = Texture("./resources/image/awesomeface.png");
     auto shaderArc = ShaderProgram(
             "./src/shader/arc.vert",
             "./src/shader/arc.frag",
@@ -127,7 +127,7 @@ bool Main::init() {
         return false;
     }
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.2, 0.2, 0.2, 0.0);
     glMatrixMode(GL_PROJECTION);
     glOrtho(0, (GLdouble) VIEWPORT_W, (GLdouble) VIEWPORT_H, 0, -1.0, 1.0);
 
