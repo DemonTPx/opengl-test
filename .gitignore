@@ -1,4 +1,6 @@
 *.cmake
+!cmake/FindSDL2_image.cmake
+/cmake-build-debug
 /CMakeFiles
 /CMakeCache.txt
 .idea

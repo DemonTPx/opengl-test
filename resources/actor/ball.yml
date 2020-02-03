@@ -10,7 +10,7 @@
   data:
     strength: 100
     shape: circle
-- type: control
-  data:
-    control:
-      type: kaas
+#- type: control
+#  data:
+#    control:
+#      type: kaas

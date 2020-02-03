@@ -5,6 +5,8 @@
 #include "Main.hpp"
 #include "Circle.hpp"
 #include "ActorLoader.hpp"
+#include "Texture.h"
+#include "ShaderProgram.hpp"
 
 Main::Main():
         running(true),
@@ -21,51 +23,57 @@ int Main::run() {
         return 1;
     }
 
-    srand(time(NULL));
+    auto textureContainer = Texture("./resources/image/container.jpg");
+    auto shaderProgram = ShaderProgram(
+            "./src/shader/arc.vert",
+            "./src/shader/arc.frag",
+            "./src/shader/arc.geom"
+    );
 
-    const float originX = VIEWPORT_H / 2;
-    const float originY = VIEWPORT_H / 2;
+    // setup vertices
+    float vertices[] = {
+            // positions
+            0.0f, 0.8f, 0.0f
+    };
 
-    ball.x = VIEWPORT_H / 2;
-    ball.y = VIEWPORT_H / 20;
-    ball.speed = 5.0;
-    ball.direction = 0;
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
 
-//    ball.direction = (float) fmod((float) rand(), M_PI * 2);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    float directionFromOrigin = 0.0;
-    float distanceFromOrigin;
+    // positions
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+
+    shaderProgram.use();
+    shaderProgram.set1i("aTexture", 0);
+    shaderProgram.set1f("size", 30.0f);
 
     while (running) {
         process_events();
-        ball.move();
 
-        distanceFromOrigin = sqrtf(pow(fabs(ball.x - originX), 2) + pow(fabs(ball.y - originY), 2));
-        directionFromOrigin = atan2(ball.y - originY, ball.x - originX);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        if (distanceFromOrigin > ((VIEWPORT_H / 2) - ball.r)) {
+        shaderProgram.use();
+        shaderProgram.set1f("angle", 30.0 * (float) SDL_GetTicks() / 1000);
 
-            std::cout << "Bouce!" << std::endl;
+        glActiveTexture(GL_TEXTURE0);
+        textureContainer.bind();
 
-            std::cout << "Direction: " << ball.direction << " / Speed: " << ball.speed << std::endl;
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glBindVertexArray(0);
 
-            std::cout << "Direction from origin: " << directionFromOrigin << std::endl;
-            std::cout << "Distance from origin: " << distanceFromOrigin << std::endl;
-
-//            ball.direction = (float) fmod(ball.direction + M_PI, M_PI * 2);
-//            ball.direction += -(M_PI / 8) + fmod((float) rand(), M_PI / 4);
-
-            ball.direction += M_PI + (2 * (directionFromOrigin - ball.direction));
-
-//            ball.speed += fmod((float) rand(), 0.2f);
-//            ball.speed = (float) fmin(10.0f, ball.speed);
-
-            std::cout << "Direction: " << ball.direction << " / Speed: " << ball.speed << std::endl;
-        }
-
-        draw_screen();
         flip();
     }
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 
     clean_up();
 
@@ -78,6 +86,10 @@ bool Main::init() {
         fprintf(stderr, "Video initialization failed: %s\n", SDL_GetError());
         return false;
     }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -114,41 +126,16 @@ void Main::process_events() {
     SDL_Event event;
 
     while(SDL_PollEvent(&event)) {
-        if(event.type == SDL_QUIT) {
+        if (event.type == SDL_QUIT) {
             running = false;
         }
-        if(event.type == SDL_KEYDOWN) {
-            if(event.key.keysym.mod & KMOD_ALT && event.key.keysym.sym == SDLK_F4) {
+        if (event.type == SDL_KEYDOWN) {
+            if (event.key.keysym.sym == SDLK_ESCAPE ||
+                (event.key.keysym.mod & KMOD_ALT && event.key.keysym.sym == SDLK_F4)) {
                 running = false;
             }
         }
     }
-}
-
-void Main::draw_screen() {
-    glMatrixMode(GL_MODELVIEW);
-
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-
-    Color red(1.0, 0.0, 0.0),
-            green(0.0, 1.0, 0.0),
-            blue(0.0, 0.0, 1.0),
-            white(1.0, 1.0, 1.0),
-            black(0.0, 0.0, 0.0);
-
-    Color(0.5, 0.5, 0.5).commit();
-    glBegin(GL_QUADS);
-        glVertex3i(0, VIEWPORT_H, 0);
-        glVertex3i(VIEWPORT_H, VIEWPORT_H, 0);
-        glVertex3i(VIEWPORT_H, 0, 0);
-        glVertex3i(0, 0, 0);
-    glEnd();
-
-    Circle circle(VIEWPORT_H / 2, VIEWPORT_H / 2, VIEWPORT_H / 2, black, black);
-    circle.draw();
-
-    ball.draw();
 }
 
 void Main::flip()
@@ -163,16 +150,14 @@ void Main::flip()
 
 int main(int argc, char *args[]) {
 
-    ActorLoader loader;
-    auto actor = loader.Load("resources/actor/ball.yml");
-
-    std::cout << actor->ListComponents() << std::endl;
-
-    actor->Update(100);
-
-    actor->Destroy();
-
-    return 0;
+//    ActorLoader loader;
+//    auto actor = loader.Load("resources/actor/ball.yml");
+//
+//    std::cout << actor->ListComponents() << std::endl;
+//
+//    actor->Update(100);
+//
+//    actor->Destroy();
 
     Main main;
     main.run();
