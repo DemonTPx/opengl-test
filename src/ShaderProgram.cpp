@@ -68,6 +68,7 @@ void ShaderProgram::guardCompileErrors(const unsigned int shader) const
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         std::cout << "Error: shader compilation failed" << std::endl;
+        std::cout << infoLog << std::endl;
         throw std::runtime_error("Error: shader compilation failed");
     }
 }

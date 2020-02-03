@@ -24,16 +24,23 @@ int Main::run() {
     }
 
     auto textureContainer = Texture("./resources/image/container.jpg");
-    auto shaderProgram = ShaderProgram(
+    auto textureAwesome = Texture("./resources/image/wall.jpg");
+    auto shaderArc = ShaderProgram(
             "./src/shader/arc.vert",
             "./src/shader/arc.frag",
             "./src/shader/arc.geom"
+    );
+    auto shaderBall = ShaderProgram(
+            "./src/shader/ball.vert",
+            "./src/shader/ball.frag",
+            "./src/shader/ball.geom"
     );
 
     // setup vertices
     float vertices[] = {
             // positions
-            0.0f, 0.8f, 0.0f
+            0.0f, 0.8f, 0.0f,
+            0.0f, 0.0f, 0.0f
     };
 
     unsigned int VAO;
@@ -46,27 +53,41 @@ int Main::run() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // positions
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
-    shaderProgram.use();
-    shaderProgram.set1i("aTexture", 0);
-    shaderProgram.set1f("size", 30.0f);
+    shaderArc.use();
+    shaderArc.set1i("aTexture", 0);
+    shaderArc.set1f("size", 30.0f);
+
+    shaderBall.use();
+    shaderBall.set1i("aTexture", 0);
+    shaderBall.set1f("size", 0.2f);
 
     while (running) {
         process_events();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shaderProgram.use();
-        shaderProgram.set1f("angle", 30.0 * (float) SDL_GetTicks() / 1000);
+        shaderArc.use();
+        shaderArc.set1f("angle", 30.0 * (float) SDL_GetTicks() / 1000);
 
         glActiveTexture(GL_TEXTURE0);
         textureContainer.bind();
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_POINTS, 0, 1);
+        glBindVertexArray(0);
+
+        shaderBall.use();
+        shaderBall.set1f("size", 0.2f + abs(cos((float) SDL_GetTicks() / 1000)) * 0.3f);
+
+        glActiveTexture(GL_TEXTURE0);
+        textureAwesome.bind();
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_POINTS, 1, 1);
         glBindVertexArray(0);
 
         flip();
