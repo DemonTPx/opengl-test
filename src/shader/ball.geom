@@ -1,11 +1,12 @@
 #version 330 core
 layout (points) in;
-layout (triangle_strip, max_vertices = 50) out;
+layout (triangle_strip, max_vertices = 77) out;
 
 uniform float size;
 
 const float PI = 3.1415926;
-const int numSegments = 32;
+// max_vertices = (numSegments * 1.5) + 2
+const int numSegments = 50;
 
 out vec2 textureCoordinate;
 
