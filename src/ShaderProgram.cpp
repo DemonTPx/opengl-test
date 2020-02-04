@@ -40,7 +40,7 @@ unsigned int ShaderProgram::createShader(const char* path, GLenum shaderType) co
         stream << shaderFile.rdbuf();
         shaderFile.close();
     }
-    catch(std::ifstream::failure e)
+    catch(std::ifstream::failure &e)
     {
         std::cout << "Error: could not read shader: " << path << std::endl;
         throw std::runtime_error("ERROR: could not read shader");
@@ -49,7 +49,7 @@ unsigned int ShaderProgram::createShader(const char* path, GLenum shaderType) co
     std::string stringCode = stream.str();
     const char* code = stringCode.c_str();
     unsigned int shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &code, NULL);
+    glShaderSource(shader, 1, &code, nullptr);
     glCompileShader(shader);
 
     guardCompileErrors(shader);
@@ -58,7 +58,7 @@ unsigned int ShaderProgram::createShader(const char* path, GLenum shaderType) co
 }
 
 
-void ShaderProgram::guardCompileErrors(const unsigned int shader) const
+void ShaderProgram::guardCompileErrors(const GLuint shader) const
 {
     int success;
 
@@ -66,7 +66,7 @@ void ShaderProgram::guardCompileErrors(const unsigned int shader) const
     if ( ! success)
     {
         char infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cout << "Error: shader compilation failed" << std::endl;
         std::cout << infoLog << std::endl;
         throw std::runtime_error("Error: shader compilation failed");
@@ -82,7 +82,7 @@ void ShaderProgram::guardLinkErrors() const
     if ( ! success)
     {
         char infoLog[512];
-        glGetProgramInfoLog(id, 512, NULL, infoLog);
+        glGetProgramInfoLog(id, 512, nullptr, infoLog);
         std::cout << "Error: shader linking failed" << std::endl;
         throw std::runtime_error("Error: shader linking failed");
     }

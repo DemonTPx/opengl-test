@@ -8,7 +8,7 @@ Texture::Texture(const char* path) : id(0)
     if ( ! surface)
     {
         std::cout << "Error: could not load texture " << path << std::endl;
-        throw new std::runtime_error("Error: Could not load texture");
+        throw std::runtime_error("Error: Could not load texture");
     }
 
     int Mode = GL_RGB;
@@ -41,7 +41,7 @@ Texture::Texture(std::vector<std::string> faces) : id(0)
         if ( ! surface)
         {
             std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-            throw new std::runtime_error("Error: Could not load texture for cubemap");
+            throw std::runtime_error("Error: Could not load texture for cubemap");
         }
 
         int Mode = GL_RGB;

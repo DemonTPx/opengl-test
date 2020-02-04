@@ -13,8 +13,8 @@ protected:
     GLuint id;
 
 public:
-    Texture(const char* path);
-    Texture(std::vector<std::string> faces);
+    explicit Texture(const char* path);
+    explicit Texture(std::vector<std::string> faces);
 
     void bind()
     {

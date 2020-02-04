@@ -46,7 +46,7 @@ protected:
     GLuint id;
 
     GLuint createShader(const char* path, GLenum shaderType) const;
-    void guardCompileErrors(const unsigned int shader) const;
+    void guardCompileErrors(GLuint shader) const;
     void guardLinkErrors() const;
 };
 
